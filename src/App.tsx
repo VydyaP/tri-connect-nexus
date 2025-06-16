@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import SelectRole from "./pages/SelectRole";
+import GoogleAuth from "./pages/GoogleAuth";
+import LinkedInAuth from "./pages/LinkedInAuth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ const App = () => (
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/select-role" element={<SelectRole />} />
+            <Route path="/auth/google" element={<GoogleAuth />} />
+            <Route path="/auth/linkedin" element={<LinkedInAuth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

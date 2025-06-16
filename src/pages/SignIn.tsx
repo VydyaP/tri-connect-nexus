@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +11,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleEmailSignIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,13 +20,11 @@ const SignIn = () => {
   };
 
   const handleGoogleSignIn = () => {
-    console.log("Google sign in");
-    // TODO: Implement Google OAuth
+    navigate("/auth/google");
   };
 
   const handleLinkedInSignIn = () => {
-    console.log("LinkedIn sign in");
-    // TODO: Implement LinkedIn OAuth
+    navigate("/auth/linkedin");
   };
 
   return (

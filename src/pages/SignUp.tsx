@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +20,7 @@ const SignUp = () => {
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const calculatePasswordStrength = (password: string) => {
     let strength = 0;
@@ -71,13 +71,11 @@ const SignUp = () => {
   };
 
   const handleGoogleSignUp = () => {
-    console.log("Google sign up");
-    // TODO: Implement Google OAuth
+    navigate("/auth/google");
   };
 
   const handleLinkedInSignUp = () => {
-    console.log("LinkedIn sign up");
-    // TODO: Implement LinkedIn OAuth
+    navigate("/auth/linkedin");
   };
 
   const handleEmailSignUp = (e: React.FormEvent) => {
