@@ -6,17 +6,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LinkedInAuth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("LinkedIn login:", { email, password });
-    // Mock successful login - redirect to select role
+    
+    // Mock successful login - set user as authenticated
+    login({
+      name: email.split('@')[0], // Extract name from email for demo
+      email: email
+    });
+    
     navigate("/select-role");
   };
 
