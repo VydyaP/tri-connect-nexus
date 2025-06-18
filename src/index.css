@@ -38,19 +38,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -108,8 +101,29 @@
     animation: fadeIn 0.6s ease-out forwards;
   }
 
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+  }
+
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
   .hover-scale {
     @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  .scroll-parallax {
+    transform: translateY(var(--scroll-y, 0));
+  }
+
+  .floating-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .gradient-shift {
+    animation: gradientShift 8s ease-in-out infinite;
   }
 
   @keyframes fadeIn {
@@ -122,4 +136,91 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes gradientShift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slideInUp 0.8s ease-out forwards;
+  }
+
+  .animate-slide-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  .animate-slide-right {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
 }
+
+/* Smooth scrolling effects */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
+}
+

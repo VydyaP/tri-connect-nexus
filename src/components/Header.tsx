@@ -49,19 +49,11 @@ const Header = () => {
               Logout
             </Button>
           ) : (
-            <>
-              <Link to="/signin">
-                <Button variant="ghost" className="hover:bg-accent">
-                  Sign In
-                </Button>
-              </Link>
-              
-              <Link to="/signup">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Sign Up
-                </Button>
-              </Link>
-            </>
+            <Link to="/signin">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                Sign In / Sign Up
+              </Button>
+            </Link>
           )}
         </div>
       </div>

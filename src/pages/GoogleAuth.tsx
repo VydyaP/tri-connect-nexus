@@ -2,27 +2,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const GoogleAuth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Google login:", { email, password });
+    console.log("Google OAuth simulation");
     
-    // Mock successful login - set user as authenticated
+    // Mock successful Google login
     login({
-      name: email.split('@')[0], // Extract name from email for demo
-      email: email
+      name: "Google User",
+      email: "user@gmail.com"
     });
     
     navigate("/select-role");
@@ -59,55 +54,29 @@ const GoogleAuth = () => {
               <CardTitle className="text-2xl font-bold">Google</CardTitle>
             </div>
             <p className="text-muted-foreground">
-              Sign in to your Google account
+              Sign in with your Google account
             </p>
           </div>
         </CardHeader>
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email or phone</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your Gmail address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </Button>
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                G
               </div>
+              <p className="text-muted-foreground">
+                Click below to authenticate with Google
+              </p>
             </div>
             
             <Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700">
-              Sign in with Google
+              Continue with Google
             </Button>
           </form>
           
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>This is a demo Google login page</p>
+            <p>This is a demo Google OAuth page</p>
           </div>
         </CardContent>
       </Card>

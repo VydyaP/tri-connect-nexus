@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,18 +6,36 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleEmailSignIn = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email sign in:", { email, password });
-    // TODO: Implement email sign in logic
+    console.log("Name sign in:", { name, password });
+    
+    // Mock logic to simulate new user creation
+    const isNewUser = !localStorage.getItem(`user_${name}`);
+    
+    if (isNewUser) {
+      localStorage.setItem(`user_${name}`, "true");
+      setMessage("New account created! Welcome to TriConnect.");
+    }
+    
+    // Set user as authenticated
+    login({
+      name: name,
+      email: `${name}@triconnect.com` // Mock email for demo
+    });
+    
+    navigate("/select-role");
   };
 
   const handleGoogleSignIn = () => {
@@ -75,21 +94,27 @@ const SignIn = () => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  Or sign in with email
+                  Or sign in with name
                 </span>
               </div>
             </div>
             
-            {/* Email Form */}
+            {/* Name Form */}
             <form onSubmit={handleEmailSignIn} className="space-y-4">
+              {message && (
+                <div className="p-3 bg-green-100 border border-green-300 text-green-700 rounded-md text-sm">
+                  {message}
+                </div>
+              )}
+              
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="work@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
                 />
               </div>
@@ -122,18 +147,6 @@ const SignIn = () => {
               </Button>
             </form>
           </CardContent>
-          
-          <CardFooter className="flex flex-col space-y-2 text-center text-sm">
-            <Link to="/forgot-password" className="text-primary hover:underline">
-              Forgot your password?
-            </Link>
-            <div className="text-muted-foreground">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-primary hover:underline">
-                Create new account
-              </Link>
-            </div>
-          </CardFooter>
         </Card>
       </div>
     </div>

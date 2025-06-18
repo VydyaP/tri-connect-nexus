@@ -8,7 +8,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
 import SelectRole from "./pages/SelectRole";
 import GoogleAuth from "./pages/GoogleAuth";
 import LinkedInAuth from "./pages/LinkedInAuth";
@@ -27,7 +26,6 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
               <Route path="/select-role" element={<SelectRole />} />
               <Route path="/auth/google" element={<GoogleAuth />} />
               <Route path="/auth/linkedin" element={<LinkedInAuth />} />
