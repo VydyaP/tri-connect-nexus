@@ -3,9 +3,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 
 const SelectRole = () => {
+  const navigate = useNavigate();
+  
   // Mock user data - in real app this would come from auth context
   const user = {
     name: "Alex Johnson",
@@ -71,8 +74,7 @@ const SelectRole = () => {
 
   const handleProfessionSelect = (profession: any) => {
     console.log(`Selected profession: ${profession.title}`);
-    // TODO: Navigate to profession-specific dashboard
-    // navigate(profession.route);
+    navigate(profession.route);
   };
 
   return (

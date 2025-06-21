@@ -12,6 +12,9 @@ import SelectRole from "./pages/SelectRole";
 import GoogleAuth from "./pages/GoogleAuth";
 import LinkedInAuth from "./pages/LinkedInAuth";
 import NotFound from "./pages/NotFound";
+import DeveloperMatch from "./pages/DeveloperMatch";
+import DoctorMatch from "./pages/DoctorMatch";
+import FounderMatch from "./pages/FounderMatch";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,9 @@ const App = () => (
               <Route path="/select-role" element={<SelectRole />} />
               <Route path="/auth/google" element={<GoogleAuth />} />
               <Route path="/auth/linkedin" element={<LinkedInAuth />} />
+              <Route path="/match/developer" element={<DeveloperMatch />} />
+              <Route path="/match/doctor" element={<DoctorMatch />} />
+              <Route path="/match/founder" element={<FounderMatch />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
