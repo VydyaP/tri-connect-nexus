@@ -3,62 +3,37 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Settings, Users, MessageCircle, Heart, Rocket, TrendingUp } from "lucide-react";
+import { Settings, Users, MessageCircle, Heart, Rocket, TrendingUp } from "lucide-react";
 import Header from "@/components/Header";
 import SwipeCard from "@/components/SwipeCard";
+import FilterDialog from "@/components/FilterDialog";
 import { useToast } from "@/hooks/use-toast";
+import { founderProfiles } from "@/data/mockProfiles";
+import { useNavigate } from "react-router-dom";
 
 const FounderMatch = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
-
-  // Mock founder profiles
-  const founderProfiles = [
-    {
-      id: "1",
-      name: "Jessica Kim",
-      age: 30,
-      location: "Palo Alto, CA",
-      profession: "AI Startup Founder",
-      company: "InnovateTech AI",
-      bio: "Building the future of AI-powered healthcare. Series A funded. Looking for someone who shares my passion for innovation and making an impact.",
-      interests: ["AI/ML", "Healthcare Tech", "Venture Capital", "Skiing", "Wine Tasting", "Podcasts"],
-      photos: ["photo-1581091226825-a6a2a5aee158", "photo-1473091534298-04dcbce3278c"],
-      onlineStatus: "online" as const,
-      matchScore: 96,
-    },
-    {
-      id: "2",
-      name: "Marcus Thompson",
-      age: 33,
-      location: "New York, NY",
-      profession: "FinTech CEO",
-      company: "PayFlow Solutions",
-      bio: "Disrupting traditional banking with blockchain technology. When I'm not fundraising, I love playing basketball and exploring new restaurants.",
-      interests: ["Blockchain", "FinTech", "Basketball", "Food", "Real Estate", "Mentoring"],
-      photos: ["photo-1519389950473-47ba0277781c", "photo-1486312338219-ce68d2c6f44d"],
-      onlineStatus: "recently" as const,
-      matchScore: 89,
-    },
-    {
-      id: "3",
-      name: "Sophia Rodriguez",
-      age: 28,
-      location: "Austin, TX",
-      profession: "SaaS Founder",
-      company: "CloudScale Pro",
-      bio: "Scaling businesses through intelligent automation. Bootstrapped to $10M ARR. Love rock climbing and building communities.",
-      interests: ["SaaS", "Automation", "Rock Climbing", "Community Building", "Public Speaking", "Travel"],
-      photos: ["photo-1465146344425-f00d5f5c8f07", "photo-1472396961693-142e6e269027"],
-      onlineStatus: "online" as const,
-      matchScore: 93,
-    }
-  ];
-
   const [profiles, setProfiles] = useState(founderProfiles);
+  const [filteredProfiles, setFilteredProfiles] = useState(founderProfiles);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const handleFiltersChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    if (filters.length === 0) {
+      setFilteredProfiles(profiles);
+    } else {
+      const filtered = profiles.filter(profile => 
+        filters.includes(profile.profession)
+      );
+      setFilteredProfiles(filtered);
+    }
+    setCurrentProfileIndex(0);
+  };
 
   const handleLike = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
     toast({
       title: "It's a Match! 💕",
       description: `You and ${profile?.name} liked each other!`,
@@ -71,7 +46,8 @@ const FounderMatch = () => {
   };
 
   const handleMessage = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
+    navigate(`/chat?id=${profileId}`);
     toast({
       title: "Message Sent! 💬",
       description: `Started a conversation with ${profile?.name}`,
@@ -79,7 +55,7 @@ const FounderMatch = () => {
   };
 
   const nextProfile = () => {
-    if (currentProfileIndex < profiles.length - 1) {
+    if (currentProfileIndex < filteredProfiles.length - 1) {
       setCurrentProfileIndex(prev => prev + 1);
     } else {
       toast({
@@ -89,7 +65,7 @@ const FounderMatch = () => {
     }
   };
 
-  const currentProfile = profiles[currentProfileIndex];
+  const currentProfile = filteredProfiles[currentProfileIndex];
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,14 +86,26 @@ const FounderMatch = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+              <FilterDialog type="founder" onFiltersChange={handleFiltersChange} />
               <Button variant="outline" size="icon">
                 <Settings className="h-4 w-4" />
               </Button>
             </div>
           </div>
+
+          {/* Active Filters */}
+          {activeFilters.length > 0 && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm text-muted-foreground">Active filters:</span>
+                {activeFilters.map((filter) => (
+                  <Badge key={filter} variant="secondary">
+                    {filter}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Main Swipe Area */}

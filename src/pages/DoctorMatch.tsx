@@ -3,62 +3,37 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Settings, Users, MessageCircle, Heart, Stethoscope } from "lucide-react";
+import { Settings, Users, MessageCircle, Heart, Stethoscope } from "lucide-react";
 import Header from "@/components/Header";
 import SwipeCard from "@/components/SwipeCard";
+import FilterDialog from "@/components/FilterDialog";
 import { useToast } from "@/hooks/use-toast";
+import { doctorProfiles } from "@/data/mockProfiles";
+import { useNavigate } from "react-router-dom";
 
 const DoctorMatch = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
-
-  // Mock doctor profiles
-  const doctorProfiles = [
-    {
-      id: "1",
-      name: "Dr. Maria Santos",
-      age: 34,
-      location: "Boston, MA",
-      profession: "Cardiologist",
-      company: "Massachusetts General Hospital",
-      bio: "Passionate about heart health and helping patients live their best lives. Love traveling and trying new cuisines in my free time.",
-      interests: ["Cardiology", "Medical Research", "Travel", "Cooking", "Yoga", "Photography"],
-      photos: ["photo-1465146344425-f00d5f5c8f07", "photo-1501854140801-50d01698950b"],
-      onlineStatus: "online" as const,
-      matchScore: 92,
-    },
-    {
-      id: "2",
-      name: "Dr. James Wilson",
-      age: 29,
-      location: "Chicago, IL",
-      profession: "Emergency Medicine",
-      company: "Northwestern Memorial Hospital",
-      bio: "ER doctor who thrives under pressure. When I'm not saving lives, I'm probably hiking or playing tennis.",
-      interests: ["Emergency Medicine", "Trauma Care", "Hiking", "Tennis", "Chess", "Coffee"],
-      photos: ["photo-1472396961693-142e6e269027", "photo-1488590528505-98d2b5aba04b"],
-      onlineStatus: "recently" as const,
-      matchScore: 88,
-    },
-    {
-      id: "3",
-      name: "Dr. Priya Patel",
-      age: 31,
-      location: "San Francisco, CA",
-      profession: "Pediatrician",
-      company: "UCSF Benioff Children's Hospital",
-      bio: "Dedicated to children's health and wellbeing. Love reading, painting, and spending time with my golden retriever.",
-      interests: ["Pediatrics", "Child Development", "Reading", "Painting", "Dogs", "Meditation"],
-      photos: ["photo-1465146344425-f00d5f5c8f07", "photo-1501854140801-50d01698950b"],
-      onlineStatus: "online" as const,
-      matchScore: 95,
-    }
-  ];
-
   const [profiles, setProfiles] = useState(doctorProfiles);
+  const [filteredProfiles, setFilteredProfiles] = useState(doctorProfiles);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const handleFiltersChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    if (filters.length === 0) {
+      setFilteredProfiles(profiles);
+    } else {
+      const filtered = profiles.filter(profile => 
+        filters.includes(profile.profession)
+      );
+      setFilteredProfiles(filtered);
+    }
+    setCurrentProfileIndex(0);
+  };
 
   const handleLike = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
     toast({
       title: "It's a Match! 💕",
       description: `You and ${profile?.name} liked each other!`,
@@ -71,7 +46,8 @@ const DoctorMatch = () => {
   };
 
   const handleMessage = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
+    navigate(`/chat?id=${profileId}`);
     toast({
       title: "Message Sent! 💬",
       description: `Started a conversation with ${profile?.name}`,
@@ -79,7 +55,7 @@ const DoctorMatch = () => {
   };
 
   const nextProfile = () => {
-    if (currentProfileIndex < profiles.length - 1) {
+    if (currentProfileIndex < filteredProfiles.length - 1) {
       setCurrentProfileIndex(prev => prev + 1);
     } else {
       toast({
@@ -89,7 +65,7 @@ const DoctorMatch = () => {
     }
   };
 
-  const currentProfile = profiles[currentProfileIndex];
+  const currentProfile = filteredProfiles[currentProfileIndex];
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,14 +86,26 @@ const DoctorMatch = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+              <FilterDialog type="doctor" onFiltersChange={handleFiltersChange} />
               <Button variant="outline" size="icon">
                 <Settings className="h-4 w-4" />
               </Button>
             </div>
           </div>
+
+          {/* Active Filters */}
+          {activeFilters.length > 0 && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm text-muted-foreground">Active filters:</span>
+                {activeFilters.map((filter) => (
+                  <Badge key={filter} variant="secondary">
+                    {filter}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Main Swipe Area */}

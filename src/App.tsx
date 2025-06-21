@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import DeveloperMatch from "./pages/DeveloperMatch";
 import DoctorMatch from "./pages/DoctorMatch";
 import FounderMatch from "./pages/FounderMatch";
+import Chat from "./pages/Chat";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/match/developer" element={<DeveloperMatch />} />
               <Route path="/match/doctor" element={<DoctorMatch />} />
               <Route path="/match/founder" element={<FounderMatch />} />
+              <Route path="/chat" element={<Chat />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

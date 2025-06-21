@@ -3,62 +3,37 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Settings, Users, MessageCircle, Heart, Zap } from "lucide-react";
+import { Settings, Users, MessageCircle, Heart, Zap } from "lucide-react";
 import Header from "@/components/Header";
 import SwipeCard from "@/components/SwipeCard";
+import FilterDialog from "@/components/FilterDialog";
 import { useToast } from "@/hooks/use-toast";
+import { developerProfiles } from "@/data/mockProfiles";
+import { useNavigate } from "react-router-dom";
 
 const DeveloperMatch = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
-
-  // Mock developer profiles
-  const developerProfiles = [
-    {
-      id: "1",
-      name: "Sarah Chen",
-      age: 28,
-      location: "San Francisco, CA",
-      profession: "Full Stack Developer",
-      company: "Google",
-      bio: "Passionate about React and machine learning. Love building products that make a difference. When I'm not coding, you'll find me hiking or playing guitar.",
-      interests: ["React", "Python", "Machine Learning", "Hiking", "Guitar", "Coffee"],
-      photos: ["photo-1488590528505-98d2b5aba04b", "photo-1518770660439-4636190af475"],
-      onlineStatus: "online" as const,
-      matchScore: 94,
-    },
-    {
-      id: "2",
-      name: "Alex Rodriguez",
-      age: 32,
-      location: "Austin, TX",
-      profession: "DevOps Engineer",
-      company: "Netflix",
-      bio: "Infrastructure enthusiast who loves automating everything. Kubernetes wizard by day, craft beer enthusiast by night.",
-      interests: ["Kubernetes", "AWS", "Automation", "Craft Beer", "Rock Climbing", "Photography"],
-      photos: ["photo-1461749280684-dccba630e2f6", "photo-1581091226825-a6a2a5aee158"],
-      onlineStatus: "recently" as const,
-      matchScore: 87,
-    },
-    {
-      id: "3",
-      name: "Emily Johnson",
-      age: 26,
-      location: "Seattle, WA",
-      profession: "Frontend Developer",
-      company: "Microsoft",
-      bio: "UI/UX lover creating beautiful and accessible web experiences. Always learning new frameworks and design patterns.",
-      interests: ["Vue.js", "TypeScript", "Design Systems", "Accessibility", "Yoga", "Books"],
-      photos: ["photo-1473091534298-04dcbce3278c", "photo-1519389950473-47ba0277781c"],
-      onlineStatus: "online" as const,
-      matchScore: 91,
-    }
-  ];
-
   const [profiles, setProfiles] = useState(developerProfiles);
+  const [filteredProfiles, setFilteredProfiles] = useState(developerProfiles);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  const handleFiltersChange = (filters: string[]) => {
+    setActiveFilters(filters);
+    if (filters.length === 0) {
+      setFilteredProfiles(profiles);
+    } else {
+      const filtered = profiles.filter(profile => 
+        filters.includes(profile.profession)
+      );
+      setFilteredProfiles(filtered);
+    }
+    setCurrentProfileIndex(0);
+  };
 
   const handleLike = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
     toast({
       title: "It's a Match! 💕",
       description: `You and ${profile?.name} liked each other!`,
@@ -71,7 +46,8 @@ const DeveloperMatch = () => {
   };
 
   const handleMessage = (profileId: string) => {
-    const profile = profiles.find(p => p.id === profileId);
+    const profile = filteredProfiles.find(p => p.id === profileId);
+    navigate(`/chat?id=${profileId}`);
     toast({
       title: "Message Sent! 💬",
       description: `Started a conversation with ${profile?.name}`,
@@ -79,7 +55,7 @@ const DeveloperMatch = () => {
   };
 
   const nextProfile = () => {
-    if (currentProfileIndex < profiles.length - 1) {
+    if (currentProfileIndex < filteredProfiles.length - 1) {
       setCurrentProfileIndex(prev => prev + 1);
     } else {
       toast({
@@ -89,7 +65,7 @@ const DeveloperMatch = () => {
     }
   };
 
-  const currentProfile = profiles[currentProfileIndex];
+  const currentProfile = filteredProfiles[currentProfileIndex];
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,14 +86,26 @@ const DeveloperMatch = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+              <FilterDialog type="developer" onFiltersChange={handleFiltersChange} />
               <Button variant="outline" size="icon">
                 <Settings className="h-4 w-4" />
               </Button>
             </div>
           </div>
+
+          {/* Active Filters */}
+          {activeFilters.length > 0 && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                <span className="text-sm text-muted-foreground">Active filters:</span>
+                {activeFilters.map((filter) => (
+                  <Badge key={filter} variant="secondary">
+                    {filter}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Main Swipe Area */}

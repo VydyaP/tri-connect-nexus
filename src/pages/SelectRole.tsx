@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 const SelectRole = () => {
   const navigate = useNavigate();
@@ -78,94 +80,104 @@ const SelectRole = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="pt-24 pb-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          {/* Welcome Banner */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-6">
-              <Avatar className="w-20 h-20 mr-4">
-                <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-left">
-                <h1 className="text-4xl font-bold mb-2">
-                  Welcome, {user.name.split(" ")[0]}!
-                </h1>
-                <p className="text-xl text-muted-foreground">
-                  Choose your professional community
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <AppSidebar />
+        <div className="flex-1">
+          <Header />
+          
+          <div className="pt-20 pb-16 px-4">
+            <div className="container mx-auto max-w-6xl">
+              {/* Sidebar Trigger */}
+              <div className="mb-6">
+                <SidebarTrigger />
+              </div>
+              
+              {/* Welcome Banner */}
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-6">
+                  <Avatar className="w-20 h-20 mr-4">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-left">
+                    <h1 className="text-4xl font-bold mb-2">
+                      Welcome, {user.name.split(" ")[0]}!
+                    </h1>
+                    <p className="text-xl text-muted-foreground">
+                      Choose your professional community
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Profession Cards */}
+              <div className="grid md:grid-cols-3 gap-8">
+                {professions.map((profession) => (
+                  <Card
+                    key={profession.id}
+                    className="hover-scale cursor-pointer border-0 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+                    onClick={() => handleProfessionSelect(profession)}
+                  >
+                    <CardContent className="p-0">
+                      {/* Header Section */}
+                      <div className={`${profession.bgColor} p-8 text-center`}>
+                        <div className={`w-20 h-20 mx-auto rounded-full bg-gradient-to-r ${profession.color} flex items-center justify-center text-3xl mb-4`}>
+                          {profession.icon}
+                        </div>
+                        <h3 className="text-2xl font-bold mb-2">
+                          {profession.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {profession.description}
+                        </p>
+                      </div>
+                      
+                      {/* Stats Section */}
+                      <div className="p-6 space-y-4">
+                        {profession.stats.map((stat, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              {stat.label}
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-semibold">
+                                {stat.value}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* Trend Badge */}
+                        <div className="pt-2 border-t border-border">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              Growth Trend
+                            </span>
+                            <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                              <ArrowUp className="w-3 h-3 mr-1" />
+                              {profession.trend}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Additional Info */}
+              <div className="mt-12 text-center">
+                <p className="text-muted-foreground">
+                  You can always change your profession later in your profile settings
                 </p>
               </div>
             </div>
           </div>
-          
-          {/* Profession Cards */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {professions.map((profession) => (
-              <Card
-                key={profession.id}
-                className="hover-scale cursor-pointer border-0 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-                onClick={() => handleProfessionSelect(profession)}
-              >
-                <CardContent className="p-0">
-                  {/* Header Section */}
-                  <div className={`${profession.bgColor} p-8 text-center`}>
-                    <div className={`w-20 h-20 mx-auto rounded-full bg-gradient-to-r ${profession.color} flex items-center justify-center text-3xl mb-4`}>
-                      {profession.icon}
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">
-                      {profession.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {profession.description}
-                    </p>
-                  </div>
-                  
-                  {/* Stats Section */}
-                  <div className="p-6 space-y-4">
-                    {profession.stats.map((stat, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          {stat.label}
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <span className="font-semibold">
-                            {stat.value}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                    
-                    {/* Trend Badge */}
-                    <div className="pt-2 border-t border-border">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Growth Trend
-                        </span>
-                        <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                          <ArrowUp className="w-3 h-3 mr-1" />
-                          {profession.trend}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          {/* Additional Info */}
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground">
-              You can always change your profession later in your profile settings
-            </p>
-          </div>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
